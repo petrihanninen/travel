@@ -8,7 +8,9 @@ RUN python3 build.py
 
 FROM nginx:alpine
 
-COPY --from=build --chmod=644 /app/dist/ /usr/share/nginx/html/
+COPY --from=build /app/dist/ /usr/share/nginx/html/
+RUN find /usr/share/nginx/html -type d -exec chmod 755 {} + \
+ && find /usr/share/nginx/html -type f -exec chmod 644 {} +
 
 EXPOSE 80
 
