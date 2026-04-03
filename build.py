@@ -9,6 +9,10 @@ Page files use a simple YAML-ish front matter block (delimited by ---)
 to set template variables like `title`. Everything after the front matter
 is injected as `{{ content }}`.
 
+An index page is auto-generated from src/templates/index.html, listing
+every page in src/pages/ with its title and description. Adding a new
+page to src/pages/ is all that's needed — the index updates automatically.
+
 Static assets (css/, js/) are copied to dist/ unchanged.
 
 Usage:
@@ -54,6 +58,17 @@ def render_template(template, variables):
     return re.sub(r"\{\{\s*(\w+)\s*\}\}", replacer, template)
 
 
+def build_page_card(filename, title, description):
+    """Generate an HTML card for a single page entry on the index."""
+    href = f"/{filename}"
+    desc_html = f'<p class="card-desc">{description}</p>' if description else ""
+    return f"""      <a href="{href}" class="index-card">
+        <h3 class="card-title">{title}</h3>
+        {desc_html}
+        <span class="card-arrow">&rarr;</span>
+      </a>"""
+
+
 def build():
     # Clean dist contents (but keep the directory itself)
     if os.path.exists(DIST_DIR):
@@ -78,7 +93,8 @@ def build():
     with open(base_path) as f:
         base_template = f.read()
 
-    # Process each page
+    # ── First pass: process all pages & collect metadata ──
+    pages_meta = []
     page_count = 0
     for filename in sorted(os.listdir(PAGES_DIR)):
         if not filename.endswith(".html"):
@@ -99,6 +115,32 @@ def build():
 
         page_count += 1
         print(f"  built: {filename}")
+
+        # Collect metadata for the index
+        pages_meta.append({
+            "filename": filename,
+            "title": variables.get("title", filename.replace(".html", "").replace("-", " ").title()),
+            "description": variables.get("description", ""),
+        })
+
+    # ── Generate auto-index page ──
+    index_template_path = os.path.join(TEMPLATES_DIR, "index.html")
+    if os.path.exists(index_template_path):
+        with open(index_template_path) as f:
+            index_template = f.read()
+
+        cards_html = "\n".join(
+            build_page_card(p["filename"], p["title"], p["description"])
+            for p in pages_meta
+        )
+
+        index_output = render_template(index_template, {"page_cards": cards_html})
+
+        with open(os.path.join(DIST_DIR, "index.html"), "w") as f:
+            f.write(index_output)
+
+        print(f"  built: index.html (auto-generated, {len(pages_meta)} link(s))")
+        page_count += 1
 
     print(f"\nDone — {page_count} page(s) written to dist/")
 

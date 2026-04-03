@@ -246,6 +246,38 @@ ul li::before {
   border-left: 3px solid; font-size: 0.9rem; line-height: 1.6;
 }
 
+/* ─── INDEX PAGE ─── */
+.index-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.2em; margin-top: 1.2em;
+}
+.index-card {
+  display: flex; flex-direction: column;
+  background: var(--bg-card); border-radius: 14px;
+  padding: 2em 1.8em; text-decoration: none; color: var(--text);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: border-color 0.25s, transform 0.25s;
+  position: relative;
+}
+.index-card:hover {
+  border-color: rgba(255,255,255,0.18);
+  transform: translateY(-4px);
+}
+.index-card .card-title {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 1.25rem; margin-bottom: 0.4em;
+}
+.index-card .card-desc {
+  font-size: 0.92rem; color: var(--text-dim); line-height: 1.55;
+  flex: 1;
+}
+.index-card .card-arrow {
+  align-self: flex-end; font-size: 1.4rem;
+  opacity: 0.3; transition: opacity 0.25s;
+  margin-top: 1em;
+}
+.index-card:hover .card-arrow { opacity: 0.8; }
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
   .slide--split { grid-template-columns: 1fr; }
