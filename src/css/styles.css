@@ -12,6 +12,9 @@
   --accent-at: #a3c9a8;
   --accent-sl: #7ecac2;
   --accent-fr: #c9a3c9;
+  --accent-gw: #d4a574;
+  --accent-ge: #7eb8c9;
+  --accent-gn: #8cc9a0;
 }
 
 html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
