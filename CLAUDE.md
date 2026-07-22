@@ -4,7 +4,7 @@ Personal travel research site. Each page is a full-screen scrollable slideshow c
 
 ## What this repo does
 
-Static site that builds HTML slideshows from `src/pages/`. A Python build script (`build.py`) applies a base template and generates an index page. Output goes to `dist/`, served via nginx in Docker. Deployed as a container image to GHCR on push to main.
+Static site that builds HTML slideshows from `src/pages/`. A Python build script (`build.py`) applies a base template and generates an index page. Output goes to `dist/`, deployed to GitHub Pages (https://travel.petrihanninen.com) by GitHub Actions on push to main.
 
 ## Content: the slideshows
 
@@ -65,5 +65,4 @@ dist/             # Build output (gitignored)
 ## Build & deploy
 
 - `python3 build.py` — build locally
-- `docker compose up --build` — build and serve at localhost:80
-- Push to `main` — GitHub Actions builds and pushes image to `ghcr.io/petrihanninen/travel`
+- Push to `main` — GitHub Actions (`.github/workflows/pages.yml`) builds and deploys `dist/` to GitHub Pages at https://travel.petrihanninen.com
